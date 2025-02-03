@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html>
+    <head>
+       <title>Comment Section</title>
+       <style>
+            .comment{
+                display: flex;
+                background-color: aquamarine;
+                width: 100%;
+                flex-direction: column;
+                padding: 20px;
+            }
+            .comment button{
+                width: 100px;
+                margin-top: 10px;
+                margin-bottom: 10px;
+            }
+            .inputComment{
+                padding: 15px;
+                right: 0;
+            }
+            .commentContainer{
+                display: flex;
+                background-color: red;
+                margin-top: 10px;
+                flex-direction: column;
+                border:1px solid black;
+            }
+            .innerCommentContainer{
+                display: flex;
+                background-color: rgb(255, 255, 44);
+            }
+            .userContainer{
+                display: flex;
+                width: auto;
+                background-color: rgb(0, 4, 255);
+                align-items: center;
+            }
+            .profile{
+                background-color: aliceblue;
+                height: 50px;
+                width: 50px;
+            }
+            .username{
+                display: flex;
+                padding: 10px;
+            }
+            .textContainer{
+                background-color: bisque;
+            }
+            .commentMenu{
+                background-color: rgb(43, 226, 55);
+                display: block;
+            }
+            .replyContainer{
+                display: flex;
+                flex-direction: column;
+                border: 1px solid black;
+            }
+
+       </style> 
+    </head>
+    <body>
+        <div class="comment">
+            <!--SAMPLE DIV-->
+            <h2>comment layout</h2>
+            <div class="commentContainer">
+                <div class="innerCommentContainer">
+                    <div class="userContainer">
+                        <div class="profile">
+                            <p>SP</p>
+                        </div>
+                        <div class="username">
+                            <p>SU</p>
+                        </div>
+                    </div>
+                    
+                </div>
+                <div class="textContainer">
+                    <p>ST</p>
+                </div>
+                <div class="commentMenu">
+                    <button onclick="submitReply()">Reply</button>
+                    <button onclick="editComment()">Edit</button>
+                    <button onclick="removeComment()">Remove</button>
+                </div>
+                <!--<div id="displayReplyArea"></div>--> 
+            </div><!--THE ID-->
+            <p>THE ID</p>
+
+            
+            <div class="replyContainer" id="replyContainer1" style="margin-left: 0px;">
+                <textarea placeholder="Enter Reply..." class="inputComment" id="inputComment"></textarea>
+                <div class="replyMenu">
+                    <button onclick="submitReply1()">Enter</button>
+                    <button onclick="cancelReply1()">Cancel</button>
+                </div>
+            </div>
+            <!--============================-->
+
+
+            <br><br><h2>functional comment section</h2>
+            
+            <textarea placeholder="Comment..." class="inputComment" id="inputComment"></textarea>
+            <button onclick="submitComment()">Comment</button>
+            <div id="outputComment"></div>
+
+
+            
+            
+        </div>
+        <script>
+            let allComments="";
+            let commentCount=0;
+            let replyCount=1;
+
+            function submitComment(){
+                commentCount+=1;
+                let comment = document.getElementById("inputComment").value;
+                let profile = "the profile";
+                let username = "the name";
+                let commentStructure = `
+                <div class="commentContainer">
+                    <div class="innerCommentContainer">
+                        <div class="userContainer">
+                            <div class="profile">
+                                <p>${profile}</p>
+                            </div>
+                            <div class="username">
+                                <p>${username}</p>
+                            </div>
+                        </div>
+                        
+                    </div>
+                    <div class="textContainer">
+                        <p>${comment}</p>
+                    </div>
+                    <div class="commentMenu">
+                        <button onclick="promptReplyArea(${commentCount},${replyCount})">Reply</button>
+                        <button onclick="editComment(${commentCount},${replyCount})">Edit</button>
+                        <button onclick="removeComment(${commentCount},${replyCount})">Remove</button>
+                    </div>
+                    <div id="displayReplyArea${commentCount}${replyCount}"></div>
+                </div><!--${commentCount}${replyCount}-->
+                <p>${commentCount},${replyCount}</p>
+                `;
+                allComments+=commentStructure;
+                document.getElementById("outputComment").innerHTML = allComments;
+
+            }
+
+            function promptReplyArea(idComment,idReply){
+                let commentStructure = `
+                <div class="replyContainer" id="replyContainer${idComment}${idReply}" style="margin-left: ${(idReply+5)}0px;">
+                    <textarea placeholder="Enter Reply..." class="inputComment" id="inputComment${idComment}${idReply}"></textarea>
+                    <div class="replyMenu">
+                        <button onclick="submitReply(${idComment},${idReply})">Enter</button>
+                        <button onclick="cancelReply(${idComment},${idReply})">Cancel</button>
+                    </div>
+                </div>
+                `;
+                document.getElementById(`displayReplyArea${idComment}${idReply}`).innerHTML = commentStructure;
+            }
+
+            function submitReply(idComment,idReply){
+                let idCommentTemp=idComment;
+                let idReplyTemp=idReply;
+                idReply+=1;
+                let comment = document.getElementById(`inputComment${idCommentTemp}${idReplyTemp}`).value;
+                let profile = "the profile";
+                let username = "the name";
+                let commentStructure = `
+                    <div class="commentContainer" style="margin-left: ${(idReplyTemp+5)}0px;">
+                        <div class="innerCommentContainer">
+                            <div class="userContainer">
+                                <div class="profile">
+                                    <p>${profile}</p>
+                                </div>
+                                <div class="username">
+                                    <p>${username}</p>
+                                </div>
+                            </div>
+                            
+                        </div>
+                        <div class="textContainer">
+                            <p>${comment}</p>
+                        </div>
+                        <div class="commentMenu">
+                            <button onclick="promptReplyArea(${idComment},${idReply})">Reply</button>
+                            <button onclick="editComment(${idComment},${idReply})">Edit</button>
+                            <button onclick="removeComment(${idComment},${idReply})">Remove</button>
+                        </div>
+                        <div id="displayReplyArea${idComment}${idReply}"></div>
+                    </div><!--${idComment}${idReply}-->
+                    <p>${idComment},${idReply}</p>
+                `;
+                document.getElementById(`displayReplyArea${idCommentTemp}${idReplyTemp}`).innerHTML = commentStructure;
+            }
+
+            function cancelReply(idComment,idReply){
+                document.getElementById(`replyContainer${idComment}${idReply}`).style.display="none";
+            }
+
+            function editComment(idComment,idReply){
+
+            }
+
+            function removeComment(idComment,idReply){
+
+            }
+        </script>
+
+        <br><br><hr><hr>
+        <div id="sampleOutput"></div>
+
+        <br>
+        <button onclick="sampleClicked()">enter</button>
+        <div id="sampleOutput1"></div>
+        <script>
+            /*
+            let comment={
+                "count":0,
+                "0":{
+                    "count":0,
+                    "comment":"0 index of object",
+                    "00":{
+                        "count":0,
+                        "comment":"00 index of object",
+                        "000":{
+                            "count":0,
+                            "comment":"000 index of object",
+                            "0000":{
+                                "count":0,
+                                "comment":"0000 index of object",
+                            }
+                        }
+                    },
+                    "01":{
+                        "count":0,
+                        "comment":"01 index of object",
+                        "010":{
+                            "count":0,
+                            "comment":"010 index of object",
+                        }
+                    }
+                },
+                "1":{
+                    "count":0,
+                    "comment":"1 index of object",
+                    "10":{
+                        "count":0,
+                        "comment":"10 index of object",
+                        "100":{
+                            "count":0,
+                            "comment":"100 index of object",
+                        }
+                    }
+                }
+            }*/
+
+            let asd = "qwerty";
+            let qwe = asd.includes("wea");
+            document.getElementById("sampleOutput").innerHTML=qwe;
+
+
+            let sampleObj={};
+            let sampleObjCount="0";
+            function sampleClicked(){
+                let temp1 = parseInt(sampleObjCount);
+                temp1+=1;
+                sampleObjCount = temp1.toString();
+                sampleObj[`comment${sampleObjCount}`]=`okay${sampleObjCount}`;
+                display(sampleObj);
+            }
+
+            
+            function display(theObject){
+                //console.clear();
+                let buttons="";
+                document.getElementById("sampleOutput1").innerHTML = "p";
+                for(let element1 in theObject){
+                    console.log(element1);
+                }
+
+                
+                
+                for(let count=0; count<Object.keys(theObject).length; count++){
+                    buttons+=`<br><button>${count}</button>`;
+                }
+                document.getElementById("sampleOutput1").innerHTML = buttons;
+            }
+            
+        </script>
+    </body>
+</html>
